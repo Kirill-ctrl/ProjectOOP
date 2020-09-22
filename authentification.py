@@ -19,7 +19,6 @@ def auth(data: dict) -> str:
     if password:
         token_users = Token()
         count = token_users.count_authorization(email)
-        print(count)
         if count >= 3:
             return get_token_temp(count, email)
         elif count == 0:
@@ -32,16 +31,16 @@ def auth(data: dict) -> str:
 
 def check_save_token_temp(email: str) -> str:
     conn, cur = connecting()
-    cur.execute(f"SELECT save_temp FROM token INNER JOIN users ON token.user_id = users.id WHERE email = '{email}'")
-    s = cur.fetchall()
-    for i in range(len(s)):
-        if s[i][0]:
+    token_user = Token()
+    save_temp = token_user.get_save_temp(email)
+    for i in range(len(save_temp)):
+        if save_temp[i][0]:
             d = date.today()
-            if s[i][0] - d < timedelta(days=0):
-                cur.execute(f"DELETE FROM token WHERE save_temp = '{s[i][0]}'")
+            if save_temp[i][0] - d < timedelta(days=0):
+                cur.execute(f"DELETE FROM token WHERE save_temp = '{save_temp[i][0]}'")
                 conn.commit()
                 return json.dumps("Токен был удален")
-        return json.dumps('Проверка токенов была успешно выполнена')
+    return json.dumps('Проверка токенов была успешно выполнена')
 
 
 def get_token_temp(count: int, email: str) -> str:
@@ -90,7 +89,6 @@ def sign_token(email: str) -> str:
 
 
 def get_authorization(token: str) -> bool:
-    conn, cur = connecting()
-    cur.execute(f"SELECT token_status FROM token WHERE token_text = '{token}'")
-    bool_value = cur.fetchone()[0]
+    token_user = Token()
+    bool_value = token_user.get_bool_token_status(token)
     return bool_value

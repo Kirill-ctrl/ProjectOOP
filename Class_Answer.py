@@ -3,19 +3,19 @@ import json
 
 
 class Answer1:
-    def give_data_answer(self, code: int, key_answer_dict: list, quest_id: int):
+    def give_data_answer(self, code: int, key_answer_dict: list, list_quest_id: list):
         self.code = code
-        self.quest_id = quest_id
+        self.list_quest_id = list_quest_id
         self.key_answer_dict = key_answer_dict
 
     def give_applicant_id(self, applicant_id: int):
         self.applicant_id = applicant_id
 
-    def update_answer(self, list_quest_id: list) -> str:
+    def update_answer(self) -> str:
         """Добавляем ответы в таблицу answer"""
         conn, cur = connecting()
-        for i in range(len(list_quest_id)):
-            cur.execute(f"INSERT INTO answer VALUES ({self.applicant_id}, '{self.key_answer_dict[i]}', {list_quest_id[i][0]})")
+        for i in range(len(self.list_quest_id)):
+            cur.execute(f"INSERT INTO answer VALUES ({self.applicant_id}, '{self.key_answer_dict[i]}', {self.list_quest_id[i][0]})")
             conn.commit()
         return json.dumps('Добавлено')
 

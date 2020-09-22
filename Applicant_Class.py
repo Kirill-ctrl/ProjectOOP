@@ -35,7 +35,7 @@ class Applicant:
         return list_tuples
 
     @staticmethod
-    def accept_applicant(employer_id: int, applicant_email: int):
+    def accept_applicant(employer_id: int, applicant_email: str):
         conn, cur = connecting()
         cur.execute(f"UPDATE applicant SET employer_id = {employer_id}, accept = true WHERE email = '{applicant_email}'")
         conn.commit()

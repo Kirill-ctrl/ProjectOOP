@@ -1,4 +1,3 @@
-from information_applicant import get_information_applicant
 from Employer_Class import Employer
 from information import get_status
 import json

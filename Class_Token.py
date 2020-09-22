@@ -41,3 +41,15 @@ class Token:
         cur.execute(f"SELECT token_text FROM token INNER JOIN users ON users.id = token.user_id WHERE email = '{email}'")
         token = cur.fetchone()[0]
         return token
+
+    def get_save_temp(self, email: str) -> list:
+        conn, cur = connecting()
+        cur.execute(f"SELECT save_temp FROM token INNER JOIN users ON token.user_id = users.id WHERE email = '{email}'")
+        save_temp = cur.fetchall()
+        return save_temp
+
+    def get_bool_token_status(self, token: str) -> bool:
+        conn, cur = connecting()
+        cur.execute(f"SELECT token_status FROM token WHERE token_text = '{token}'")
+        bool_value = cur.fetchone()[0]
+        return bool_value

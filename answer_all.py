@@ -32,7 +32,7 @@ def insert_answer_applicant(list_answer_applicant: list, code: int, token: str) 
             if list_answer:
                 return json.dumps('Ответы уже добавлены')
             else:
-                ans.update_answer(list_quest_id)
+                ans.update_answer()
                 return json.dumps('Добавлено')
         else:
             return json.dumps('Отказано в доступе')
