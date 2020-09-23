@@ -1,12 +1,11 @@
 from werkzeug.security import check_password_hash
-from connect import connecting
 import json
 import jwt
 from flask import make_response, request
-from register import save_tkn
+from function.Registration import save_tkn
 from datetime import *
-from Class_users import Users
-from Class_Token import Token
+from UsedClass.UsersClass import Users
+from UsedClass.TokenClass import Token
 
 
 def auth(data: dict) -> str:
@@ -17,12 +16,12 @@ def auth(data: dict) -> str:
     passw = user.get_psw(email)
     password = check_password_hash(passw, psw)
     if password:
-        token_users = Token()
-        count = token_users.count_authorization(email)
+        token_users = Token(email)
+        count = token_users.count_authorization()
         if count >= 3:
             return get_token_temp(count, email)
         elif count == 0:
-            return sign_token(email)
+            return first_token_authorization(email)
         else:
             return get_new_token(email)
     else:
@@ -30,17 +29,16 @@ def auth(data: dict) -> str:
 
 
 def check_save_token_temp(email: str) -> str:
-    conn, cur = connecting()
-    token_user = Token()
-    save_temp = token_user.get_save_temp(email)
+    token_user = Token(email)
+    save_temp = token_user.get_save_temp()
+    list_save_temp = []
     for i in range(len(save_temp)):
         if save_temp[i][0]:
             d = date.today()
             if save_temp[i][0] - d < timedelta(days=0):
-                cur.execute(f"DELETE FROM token WHERE save_temp = '{save_temp[i][0]}'")
-                conn.commit()
-                return json.dumps("Токен был удален")
-    return json.dumps('Проверка токенов была успешно выполнена')
+                list_save_temp.append(save_temp[i][0])
+    token_user.delete_token(list_save_temp)
+    return "Проверка токенов прошла успешно"
 
 
 def get_token_temp(count: int, email: str) -> str:
@@ -58,37 +56,39 @@ def get_token_temp(count: int, email: str) -> str:
         response.headers['Token'] = new_token_temp
         new_token_temp = response.headers['Token']
         del response.headers['Token']
-        user_id = user.get_id_user(email)
-        new_token = Token()
-        new_token.insert_new_token_temp(new_token_temp, user_id, time_now, new_date, email)
+        user_id = user.get_id_users(email)
+        new_token = Token(email)
+        new_token.insert_new_token_temp(new_token_temp, user_id, time_now, new_date)
         return json.dumps(f'Вы успешно вошли в систему, ваш токен : {new_token_temp}')
     except:
         return "Вы вошли в систему больше 3 раз, укажите дополнительный параметр, указывающий время сохранения токена (дни)"
 
 
 def get_new_token(email: str) -> str:
-    new_token = Token()
-    id, status = new_token.get_status_and_id(email)
-    new_token = jwt.encode({'email': email, 'status': status, 'id': id}, 'secret', algorithm='HS256')
+    new_token = Token(email)
+    user_id, status = new_token.get_status_and_id()
+    new_token = jwt.encode({'email': email, 'status': status, 'id': user_id}, 'secret', algorithm='HS256')
     response = make_response(json.dumps(f"Данные успешно добавлены, сохраните токен"), 200)
     response.headers['Token'] = new_token
     new_token = response.headers['Token']
     del response.headers['Token']
-    save_tkn(new_token, email)
+    save_tkn(new_token)
     time_now = datetime.now()
-    new_token.update_status_token(time_now, email)
+    new_token.update_status_token(time_now)
     return json.dumps(f'Вы успешно вошли в систему, ваш токен : {new_token}')
 
 
-def sign_token(email: str) -> str:
-    new_token = Token()
-    token = new_token.sign_token(email)
+def first_token_authorization(email: str) -> str:
+    new_token = Token(email)
+    token = new_token.single_token()
     time_now = datetime.now()
-    new_token.update_status_token(time_now, email)
+    new_token.update_status_token(time_now)
     return json.dumps(f"Вы успешно вошли в систему, ваш токен: {token}")
 
 
 def get_authorization(token: str) -> bool:
-    token_user = Token()
+    user = Users()
+    email = user.get_email(token)
+    token_user = Token(email)
     bool_value = token_user.get_bool_token_status(token)
     return bool_value

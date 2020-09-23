@@ -1,7 +1,6 @@
-from connect import connecting
 import json
-from Class_users import Users
-from authentification import get_authorization
+from UsedClass.UsersClass import Users
+from function.Authentication import get_authorization
 
 
 def log_out(token: str) -> str:

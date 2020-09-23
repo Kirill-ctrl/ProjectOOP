@@ -1,23 +1,10 @@
-from connect import *
-from accept_on_work import *
-from answer_all import *
-from answer_list_applicant import *
-from app11 import *
-from Applicant_Class import *
-from applicant_list import *
-from authentification import *
-from Class_Answer import *
-from Class_Question import *
-from Class_Token import *
-from Class_users import *
-from Employer_Class import *
-from employer_list import *
-from information import *
-from information_applicant import *
-from information_employer import *
-from logout import *
-from question_all import *
-from register import *
+from function.ApplicantList import *
+from UsedClass.AnswerClass import *
+from function.EmployerList import *
+from function.InformationApplicant import *
+from function.InformationEmployer import *
+from function.QuestionAll import *
+from function.Registration import *
 import requests
 import json
 

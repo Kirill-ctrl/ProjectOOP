@@ -1,7 +1,7 @@
-from Employer_Class import Employer
-from information import get_status
+from UsedClass.EmployerClass import Employer
+from function.Information import get_status
 import json
-from authentification import get_authorization
+from function.Authentication import get_authorization
 
 
 def convert_employer(list_tuple: list) -> list:

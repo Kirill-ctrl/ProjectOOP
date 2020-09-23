@@ -1,7 +1,7 @@
 import json
-from Class_Question import Question
-from information import get_status
-from authentification import get_authorization
+from UsedClass.QuestionClass import Question, QuestionList
+from function.Information import get_status
+from function.Authentication import get_authorization
 
 
 def convert_dict(code: int, questions: list) -> dict:
@@ -17,10 +17,11 @@ def get_questions(token: str) -> list or str:
         status = get_status(token)
         if status == "Applicant":
             qq = Question()
-            random_id = qq.rand()
+            question_list = QuestionList()
+            random_id = question_list.rand()
             qq.give_random_id(random_id)
             questions = qq.choice_quest()
-            code = qq.choice_code()
+            code = question_list.choice_code(random_id)
             return json.dumps(convert_dict(code, questions))
         else:
             return json.dumps("Отказано в доступе")

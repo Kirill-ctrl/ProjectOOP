@@ -1,7 +1,7 @@
-from Applicant_Class import Applicant
+from UsedClass.ApplicantClass import Applicant
 import json
-from information import get_status
-from authentification import get_authorization
+from function.Information import get_status
+from function.Authentication import get_authorization
 
 
 def convert_applicant(list_tuple: list) -> list:

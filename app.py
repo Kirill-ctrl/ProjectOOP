@@ -1,13 +1,13 @@
 from flask import Flask, request
-from applicant_list import get_inf_applicant, get_applicant_list_for_employer
-from employer_list import get_inf_employer
-from question_all import get_questions
-from answer_all import insert_answer_applicant
-from answer_list_applicant import get_list_answer_applicant
-from accept_on_work import accept_applicant
-from register import sign_up
-from authentification import auth
-from logout import log_out
+from function.ApplicantList import get_inf_applicant, get_applicant_list_for_employer
+from function.EmployerList import get_inf_employer
+from function.QuestionAll import get_questions
+from function.AnswerAll import insert_answer_applicant
+from function.AnswerListApplicant import get_list_answer_applicant
+from function.AcceptOnWork import accept_applicant
+from function.Registration import sign_up
+from function.Authentication import auth
+from function.LogOut import log_out
 
 app = Flask(__name__)
 

@@ -1,4 +1,4 @@
-from connect import connecting
+from function.Connect import connecting
 
 
 def get_information_applicant(token: str) -> tuple:

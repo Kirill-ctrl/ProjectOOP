@@ -1,9 +1,9 @@
-from Class_Question import Question
-from Class_Answer import Answer1
-from Applicant_Class import Applicant
+from UsedClass.QuestionClass import Question
+from UsedClass.AnswerClass import Answer1
+from UsedClass.ApplicantClass import Applicant
 import json
-from information import get_status
-from authentification import get_authorization
+from function.Information import get_status
+from function.Authentication import get_authorization
 
 
 def sort_ans_list(text_answer: list, text_question: list) -> list:
@@ -24,12 +24,12 @@ def get_list_answer_applicant(token: str, email: str) -> list or str:
 
             ans = Answer1()
             ans.give_applicant_id(applicant_id)
-            text_answer, id_question = ans.get_answer_list()
+            text_answer, id_questions = ans.get_answer_list()  # Получаем текст ответа и id вопросов, на которые отвечал соискатель
 
             qq = Question()
-            text_question = qq.get_quest_text(id_question)
+            text_question = qq.get_quest_text(id_questions)  # Получаем текст вопросов по id
 
-            list_dict = sort_ans_list(text_answer, text_question)
+            list_dict = sort_ans_list(text_answer, text_question)  # Сортируем по тексту вопроса и ответу на него
             return json.dumps(list_dict)
     else:
         return json.dumps("Вы не авторизованы")

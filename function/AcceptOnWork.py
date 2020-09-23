@@ -1,8 +1,8 @@
-from Applicant_Class import Applicant
-from information import get_status
+from UsedClass.ApplicantClass import Applicant
+from function.Information import get_status
 import json
-from authentification import get_authorization
-from Employer_Class import Employer
+from function.Authentication import get_authorization
+from UsedClass.EmployerClass import Employer
 
 
 def accept_applicant(token: str, employer_email: str, applicant_email: str) -> str:

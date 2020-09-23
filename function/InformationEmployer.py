@@ -1,4 +1,5 @@
-from connect import connecting
+from function.Connect import connecting
+
 
 def get_information_employer(token: str) -> tuple:
     conn, cur = connecting()
@@ -10,4 +11,3 @@ def get_information_employer(token: str) -> tuple:
     status = s[0][2]
     user_id = s[0][3]
     return name, email, status, user_id
-
