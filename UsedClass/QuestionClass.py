@@ -20,10 +20,14 @@ class Question:
         list_id_questions = self.db.select_list_question_id(code)
         return list_id_questions
 
-    def get_quest_text(self, id_question: int) -> list:
-        list_tuple = self.db.get_question_text_by_id_question(id_question)
-        text_question = [list_tuple[i][0] for i in range(len(list_tuple))]
+    def get_quest_text(self, id_questions: list) -> list:
+        list_tuple = self.db.get_question_text_by_id_question(id_questions)
+        text_question = [list_tuple[i] for i in range(len(list_tuple))]
         return text_question
+
+    def get_id_and_pseudonym(self, key_answer_pseudonym: list) -> list:
+        list_tuple = self.db.get_question_id_and_question_pseudonym(key_answer_pseudonym)
+        return list_tuple
 
 
 class QuestionList:
@@ -43,8 +47,8 @@ class QuestionList:
         self.random_id = list_random[0]
         return list_random[0]
 
-    def choice_code(self, random_id) -> int:
-        """Выбрать код этих вопросов"""
+    def choice_code(self, random_id: int) -> int:
+        """Выбрать код вопросов по random_id"""
         list_tuple = self.db.select_question_code(random_id)
         self.code = list_tuple[0]
         return list_tuple[0]

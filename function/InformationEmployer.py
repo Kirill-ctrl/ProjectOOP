@@ -2,6 +2,7 @@ from function.Connect import connecting
 
 
 def get_information_employer(token: str) -> tuple:
+    """Получаем всю информацию о работодателе"""
     conn, cur = connecting()
     cur.execute(f"SELECT employer.employer_name, users.email, users.status, employer.users_id FROM users INNER JOIN token ON token.user_id = users.id INNER JOIN employer ON employer.users_id = "
                 f"users.id WHERE token_text = '{token}'")

@@ -1,12 +1,13 @@
-import json
 from UsedClass.UsersClass import Users
 from function.Authentication import get_authorization
+from function.response import successfully_exited, not_authorized
 
 
 def log_out(token: str) -> str:
+    """Выход из системы"""
     if get_authorization(token):
         user = Users()
         user.exit(token)
-        return json.dumps("Вы успешно вышли из системы")
+        return successfully_exited()
     else:
-        return json.dumps("Вы не авторизованы")
+        return not_authorized()

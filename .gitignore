@@ -3,3 +3,4 @@
 /.idea
 CLASS_APPLICANT.py
 CLASS_EMPLOYER.py
+.pytest_cache

@@ -2,10 +2,12 @@ from UsedClass.ApplicantClass import Applicant
 import json
 from function.Information import get_status
 from function.Authentication import get_authorization
+from function.response import access_denied, not_authorized
+from function.get_check_status import check_status_applicant
 
 
 def convert_applicant(list_tuple: list) -> list:
-    """Преобразуем, работает c соискателями"""
+    """Преобразуем в список словарей, работает c соискателями"""
     list_dict = []
     for i in range(len(list_tuple)):
         list_dict.append({
@@ -22,20 +24,21 @@ def convert_applicant(list_tuple: list) -> list:
 
 
 def get_inf_applicant(token: str) -> list or str:
+    """Получаем информацию по соискателям"""
     if get_authorization(token):
         status = get_status(token)
-        if status == "Applicant":
-            return json.dumps('Отказано в доступе')
+        if check_status_applicant(status):
+            return access_denied()
         else:
             job_seeker = Applicant()
             list_tuple = job_seeker.get_applicant_list()
             return json.dumps(convert_applicant(list_tuple))
     else:
-        return json.dumps("Вы не авторизованы")
+        return not_authorized()
 
 
 def convert_applicant_list_for_employer(list_tuples: list) -> list:
-    """Преобразовать список в словарь"""
+    """Преобразуем в список словарей"""
     list_dicts = []
     for i in range(len(list_tuples)):
         list_dicts.append({
@@ -49,14 +52,15 @@ def convert_applicant_list_for_employer(list_tuples: list) -> list:
 
 
 def get_applicant_list_for_employer(token: str) -> list or str:
+    """Получаем список соискателей для работодателей"""
     if get_authorization(token):
         status = get_status(token)
-        if status == "Applicant":
-            return json.dumps('Отказано в доступе')
+        if check_status_applicant(status):
+            return access_denied()
         else:
             job_seeker = Applicant()
             list_tuples = job_seeker.list_for_employers()
             applicant_list = convert_applicant_list_for_employer(list_tuples)
             return json.dumps(applicant_list)
     else:
-        return json.dumps("Вы не авторизованы")
+        return not_authorized()

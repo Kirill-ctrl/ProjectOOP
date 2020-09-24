@@ -4,6 +4,8 @@ from UsedClass.ApplicantClass import Applicant
 import json
 from function.Information import get_status
 from function.Authentication import get_authorization
+from function.response import access_denied, not_authorized
+from function.get_check_status import check_status_applicant
 
 
 def sort_ans_list(text_answer: list, text_question: list) -> list:
@@ -13,10 +15,11 @@ def sort_ans_list(text_answer: list, text_question: list) -> list:
 
 
 def get_list_answer_applicant(token: str, email: str) -> list or str:
+    """Получаем список ответов соискателя"""
     if get_authorization(token):
         status = get_status(token)
-        if status == "Applicant":
-            return json.dumps("Отказано в доступе")
+        if check_status_applicant(status):
+            return access_denied()
         else:
             job_seeker = Applicant()
             name, email, status, users_id, applicant_id = job_seeker.get_information_from_email(email)
@@ -32,4 +35,4 @@ def get_list_answer_applicant(token: str, email: str) -> list or str:
             list_dict = sort_ans_list(text_answer, text_question)  # Сортируем по тексту вопроса и ответу на него
             return json.dumps(list_dict)
     else:
-        return json.dumps("Вы не авторизованы")
+        return not_authorized()

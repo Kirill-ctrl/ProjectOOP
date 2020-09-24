@@ -3,23 +3,27 @@ from DBClass.DataBaseClass import TokenTable
 
 class Token:
 
-    def __init__(self, email):
+    def __init__(self, email: str):
         self.db = TokenTable()
         self.token = None
         self.user_id = None
         self.email = email
 
-    def insert_token(self, token: str, user_id: int, time_now):
+    def insert_token(self, token: str, user_id: int, time_now) -> None:
+        """Добавляем токен"""
         self.db.insert_token(token, user_id, time_now)
 
     def count_authorization(self) -> int:
+        """Считаем количество авторизаций пользователя"""
         count = self.db.amount_of_authorizations(self.email)
         return count
 
-    def insert_new_token_temp(self, new_token_temp: str, user_id: int, time_now, new_date):
+    def insert_new_token_temp(self, new_token_temp: str, user_id: int, time_now, new_date) -> None:
+        """Добавляем новый временный токен"""
         self.db.insert_new_temporary_token(new_token_temp, user_id, time_now, new_date, self.email)
 
     def get_status_and_id(self) -> tuple:
+        """Получаем статус и id пользователя"""
         list_tuples = self.db.get_status_and_user_id_by_email(self.email)
         user_id = 0
         for i in range(len(list_tuples)):
@@ -27,20 +31,25 @@ class Token:
         status = list_tuples[0][0]
         return user_id, status
 
-    def update_status_token(self, time_now):
+    def update_status_token(self, time_now) -> None:
+        """Обновляем статус токена при входе в систему"""
         self.db.update_token_status(time_now, self.email)
 
     def single_token(self) -> str:
+        """Получаем единственный токен соискателя"""
         token = self.db.get_single_token(self.email)
         return token
 
     def get_save_temp(self) -> list:
+        """Получаем время сохранения временных токенов"""
         save_temp = self.db.get_save_time(self.email)
         return save_temp
 
     def get_bool_token_status(self, token: str) -> bool:
+        """Получаем токен статус для авторизации"""
         bool_value = self.db.get_bool_value_token_status(token)
         return bool_value
 
-    def delete_token(self, list_save_temp):
+    def delete_token(self, list_save_temp) -> None:
+        """Удаляем просроченные токены"""
         self.db.remove_expired_tokens(list_save_temp)

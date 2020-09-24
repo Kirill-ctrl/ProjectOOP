@@ -2,6 +2,7 @@ from function.Connect import connecting
 
 
 def get_information_applicant(token: str) -> tuple:
+    """Получаем всю информацию о соискателе"""
     conn, cur = connecting()
     cur.execute(f"SELECT applicant.applicant_name, users.email, users.status, applicant.users_id, applicant.id FROM users INNER JOIN token ON token.user_id = users.id INNER JOIN applicant ON "
                 f"applicant.users_id = "

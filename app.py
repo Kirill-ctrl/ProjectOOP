@@ -8,6 +8,9 @@ from function.AcceptOnWork import accept_applicant
 from function.Registration import sign_up
 from function.Authentication import auth
 from function.LogOut import log_out
+from UsedClass.Validate import ValidateRegistration, ValidateAuthorization, ValidateAnswerApplicant
+from marshmallow import ValidationError
+from function.response import answer_must_more_than_3
 
 app = Flask(__name__)
 
@@ -33,9 +36,16 @@ def quest():
 @app.route('/answer', methods=['POST'])
 def answer():
     list_answer_applicant = request.json
-    code = request.headers['code']
-    token = request.headers['Token']
-    return insert_answer_applicant(list_answer_applicant, code, token)
+    try:
+        if len(list_answer_applicant) >= 3:
+            result = ValidateAnswerApplicant().load(list_answer_applicant)
+            code = request.headers['code']
+            token = request.headers['Token']
+            return insert_answer_applicant(list_answer_applicant, token, code)
+        else:
+            return answer_must_more_than_3()
+    except ValidationError as err:
+        return err.messages
 
 
 @app.route("/list")
@@ -62,13 +72,21 @@ def accept():
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
-    return sign_up(data)
+    try:
+        result = ValidateRegistration().load(data)
+        return sign_up(data)
+    except ValidationError as err:
+        return err.messages
 
 
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
-    return auth(data)
+    try:
+        result = ValidateAuthorization().load(data)
+        return auth(data)
+    except ValidationError as err:
+        return err.messages
 
 
 @app.route('/logout')
