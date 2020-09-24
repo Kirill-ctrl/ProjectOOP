@@ -1,4 +1,4 @@
-/venv
+venv
 /.pytest_cache
 /.idea
 CLASS_APPLICANT.py
